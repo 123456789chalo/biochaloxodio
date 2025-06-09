@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHALOX | THE PRIME</title>
+    <link rel="shortcut icon" href="1.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --primary-color: #ff0000;
+            --secondary-color: #8B0000;
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --card-border: rgba(255, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(139, 0, 0, 0.1) 0%, transparent 40%);
+            cursor: none;
+        }
+
+        #enter-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        #enter-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff0000;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        #enter-screen p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        #enter-screen h1:hover {
+            transform: scale(1.05);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            display: none;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.7);
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .profile-bio {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 90%;
+            line-height: 1.6;
+        }
+
+        .links-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .link-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            background: rgba(50, 50, 50, 0.8);
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .link-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .link-title {
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .link-description {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .social-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.2);
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        /* Contador de visitas */
+        .visitor-counter {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            color: var(--primary-color);
+            z-index: 100;
+            font-size: 1rem;
+            display: none;
+        }
+
+        /* Controle de volume */
+        .volume-control {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .volume-icon {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .volume-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .volume-slider {
+            width: 0;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .volume-control:hover .volume-slider {
+            width: 80px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        /* Cursor personalizado */
+        .custom-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 16px;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px #ff0000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+
+        /* Efeitos de sangue/partículas */
+        .blood-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blood-particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: blood-drip linear infinite;
+        }
+
+        @keyframes blood-drip {
+            0% {
+                transform: translateY(-100px) translateX(var(--random-x));
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--random-x));
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            #enter-screen h1 {
+                font-size: 1.8rem;
+            }
+            
+            .profile-name {
+                font-size: 1.5rem;
+            }
+            
+            .profile-bio {
+                font-size: 0.8rem;
+            }
+            
+            .link-card {
+                padding: 1rem;
+            }
+            
+            .link-title {
+                font-size: 0.8rem;
+            }
+            
+            .link-description {
+                font-size: 0.6rem;
+            }
+            
+            .volume-control:hover .volume-slider {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de entrada -->
+    <div id="enter-screen">
+        <h1>CHALOX THE PRIME</h1>
+        <p>CLIQUE PARA ENTRAR</p>
+    </div>
+
+    <!-- Efeitos de sangue -->
+    <div class="blood-particles" id="blood-particles"></div>
+
+    <!-- Conteúdo principal -->
+    <div class="container" id="main-container">
+        <!-- Contador de visitas (olho) -->
+        <div class="visitor-counter" id="visitor-counter">
+            <i class="fas fa-eye"></i>
+            <span id="visitor-count">0</span>
+        </div>
+
+        <!-- Controle de volume -->
+        <div class="volume-control" id="volume-control">
+            <i class="fas fa-volume-up volume-icon" id="volume-icon"></i>
+            <input type="range" min="0" max="1" step="0.01" value="0.3" class="volume-slider" id="volume-slider">
+        </div>
+
+        <section class="profile-section">
+            <img src="video/chalox.jpg" alt="CHALOX" class="profile-pic">
+            <h1 class="profile-name">CHALOX</h1>
+            <p class="profile-bio">DOUTRINADO PELO ÓDIO</p>
+        </section>
+
+        <section class="links-section">
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/silvasx_zn/?next=%2F&hl=en" class="link-card" target="_blank">
+                <div class="link-icon">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">INSTAGRAM</div>
+                    <div class="link-description">SIGA-ME NO INSTAGRAM</div>
+                </div>
+            </a>
+
+            <!-- YouTube -->
+            <a href="https://www.youtube.com/@silvasz_zn" class="link-card" target="_blank">
+                <div class="link-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">YOUTUBE</div>
+                    <div class="link-description">ASSISTA MEUS VÍDEOS</div>
+                </div>
+            </a>
+
+            <!-- Ppcode -->
+            <a href="https://123456789chalo.github.io/chaloxcode/" class="link-card" target="_blank">
+                <div class="link-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">PPCODE</div>
+                    <div class="link-description">LOJA DE PROGRAMAÇÃO</div>
+                </div>
+            </a>
+        </section>
+
+        <div class="social-links">
+            <a href="https://www.twitch.tv/chalox_" class="social-link" target="_blank">
+                <i class="fab fa-twitch"></i>
+            </a>
+            <a href="https://www.tiktok.com/@silvasx_zn" class="social-link" target="_blank">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://discord.gg/SeawQCZGXP" class="social-link" target="_blank">
+                <i class="fab fa-discord"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Cursor personalizado -->
+    <div class="custom-cursor" id="custom-cursor">⚔️</div>
+
+    <!-- Áudio HTML5 para a música -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="video/Trippie Redd, Travis Scott - Dark Knight Dummo ft. Travis Scott.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // Configurações
+        const config = {
+            primaryColor: "#ff0000",
+            secondaryColor: "#8B0000",
+            visitorCount: localStorage.getItem('visitorCount') || 0
+        };
+
+        // Elementos
+        const enterScreen = document.getElementById('enter-screen');
+        const container = document.getElementById('main-container');
+        const customCursor = document.getElementById('custom-cursor');
+        const visitorCounter = document.getElementById('visitor-counter');
+        const visitorCountElement = document.getElementById('visitor-count');
+        const volumeControl = document.getElementById('volume-control');
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeSlider = document.getElementById('volume-slider');
+        const bgMusic = document.getElementById('bg-music');
+
+        // Estado do volume
+        let isMuted = false;
+        let lastVolume = 0.3;
+
+        // Incrementar contador de visitas
+        function incrementVisitorCount() {
+            config.visitorCount = parseInt(config.visitorCount) + 1;
+            localStorage.setItem('visitorCount', config.visitorCount);
+            visitorCountElement.textContent = config.visitorCount;
+        }
+
+        // Mostrar conteúdo quando clicar na tela de entrada
+        enterScreen.addEventListener('click', () => {
+            // Incrementar contador
+            incrementVisitorCount();
+            
+            // Efeito de transição
+            enterScreen.style.opacity = '0';
+            enterScreen.style.transition = 'opacity 0.5s ease';
+            
+            // Mostrar conteúdo principal após a transição
+            setTimeout(() => {
+                enterScreen.style.display = 'none';
+                container.style.display = 'block';
+                
+                // Mostrar controles
+                visitorCounter.style.display = 'block';
+                volumeControl.style.display = 'flex';
+                
+                // Iniciar música
+                startMusic();
+                
+                // Iniciar efeitos de sangue
+                createBloodParticles();
+            }, 500);
+        });
+
+        // Iniciar música
+        function startMusic() {
+            bgMusic.volume = lastVolume;
+            bgMusic.play().catch(e => {
+                console.log("Autoplay bloqueado:", e);
+                // Adiciona um botão para ativar o som se o autoplay for bloqueado
+                const musicButton = document.createElement('div');
+                musicButton.style.position = 'fixed';
+                musicButton.style.bottom = '20px';
+                musicButton.style.left = '50%';
+                musicButton.style.transform = 'translateX(-50%)';
+                musicButton.style.zIndex = '1000';
+                musicButton.innerHTML = `
+                
+                    <button style="padding: 10px 20px; background: linear-gradient(45deg, ${config.primaryColor}, ${config.secondaryColor}); 
+                    border: none; border-radius: 5px; color: white; cursor: pointer; font-family: inherit;">
+                        ATIVAR MÚSICA
+                    </button>
+                `;
+                document.body.appendChild(musicButton);
+                
+                musicButton.querySelector('button').addEventListener('click', () => {
+                    bgMusic.play();
+                    musicButton.style.display = 'none';
+                });
+            });
+        }
+
+        // Controle de volume
+        volumeSlider.addEventListener('input', (e) => {
+            bgMusic.volume = e.target.value;
+            lastVolume = e.target.value;
+            
+            if (e.target.value == 0) {
+                volumeIcon.className = 'fas fa-volume-mute volume-icon';
+                isMuted = true;
+            } else {
+                volumeIcon.className = 'fas fa-volume-up volume-icon';
+                isMuted = false;
+            }
+        });
+
+        volumeIcon.addEventListener('click', () => {
+            if (isMuted) {
+                bgMusic.volume = lastVolume;
+                volumeSlider.value = lastVolume;
+                volumeIcon.className = 'fas fa-volume-up volume-icon';
+                isMuted = false;
+            } else {
+                lastVolume = bgMusic.volume;
+                bgMusic.volume = 0;
+                volumeSlider.value = 0;
+                volumeIcon.className = 'fas fa-volume-mute volume-icon';
+                isMuted = true;
+            }
+        });
+
+        // Cursor personalizado
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = e.clientX + 'px';
+            customCursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                customCursor.style.color = '#ff0000';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                customCursor.style.color = config.primaryColor;
+            });
+        });
+
+        // Criar efeitos de sangue
+        function createBloodParticles() {
+            const bloodContainer = document.getElementById('blood-particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('blood-particle');
+                
+                const size = Math.random() * 5 + 2;
+                const randomX = Math.random() * 100;
+                const duration = Math.random() * 10 + 5;
+                const delay = Math.random() * -10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.setProperty('--random-x', `${randomX}vw`);
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                bloodContainer.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>
