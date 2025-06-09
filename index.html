@@ -7,8 +7,11 @@
     <link rel="shortcut icon" href="1.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Adicione os scripts do Firebase no head -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root {
+      :root {
             --bg-color: #0a0a0a;
             --primary-color: #ff0000;
             --secondary-color: #8B0000;
@@ -440,12 +443,21 @@
     </audio>
 
     <script>
-        // Configurações
-        const config = {
-            primaryColor: "#ff0000",
-            secondaryColor: "#8B0000",
-            visitorCount: localStorage.getItem('visitorCount') || 0
+        // Configurações do Firebase (SUAS CONFIGURAÇÕES)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlf1R7kZ5CZnNVYSR3b9GDlmlfXxdwsg0",
+            authDomain: "chalox-visualizcoes.firebaseapp.com",
+            databaseURL: "https://chalox-visualizcoes-default-rtdb.firebaseio.com",
+            projectId: "chalox-visualizcoes",
+            storageBucket: "chalox-visualizcoes.firebasestorage.app",
+            messagingSenderId: "669113968913",
+            appId: "1:669113968913:web:55c26a7644774a41e604b0",
+            measurementId: "G-WZL93PV51M"
         };
+
+        // Inicialize o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
         // Elementos
         const enterScreen = document.getElementById('enter-screen');
@@ -462,11 +474,43 @@
         let isMuted = false;
         let lastVolume = 0.3;
 
-        // Incrementar contador de visitas
+        // Função para gerar um ID único para o visitante
+        function getVisitorId() {
+            let visitorId = localStorage.getItem('visitorId');
+            if (!visitorId) {
+                visitorId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem('visitorId', visitorId);
+            }
+            return visitorId;
+        }
+
+        // Incrementar contador de visitas no Firebase
         function incrementVisitorCount() {
-            config.visitorCount = parseInt(config.visitorCount) + 1;
-            localStorage.setItem('visitorCount', config.visitorCount);
-            visitorCountElement.textContent = config.visitorCount;
+            const visitorId = getVisitorId();
+            const visitorsRef = database.ref('visitors');
+            
+            // Verificar se este visitante já foi contado
+            visitorsRef.child(visitorId).once('value').then(snapshot => {
+                if (!snapshot.exists()) {
+                    // Se não existe, adicionar e incrementar o contador
+                    visitorsRef.child(visitorId).set(true);
+                    
+                    const countRef = database.ref('visitorCount');
+                    countRef.transaction(currentCount => {
+                        return (currentCount || 0) + 1;
+                    }).then(() => {
+                        // Atualizar o contador local quando o Firebase responder
+                        countRef.on('value', snapshot => {
+                            visitorCountElement.textContent = snapshot.val();
+                        });
+                    });
+                } else {
+                    // Se já existe, apenas pegar o valor atual
+                    database.ref('visitorCount').on('value', snapshot => {
+                        visitorCountElement.textContent = snapshot.val();
+                    });
+                }
+            });
         }
 
         // Mostrar conteúdo quando clicar na tela de entrada
@@ -508,8 +552,7 @@
                 musicButton.style.transform = 'translateX(-50%)';
                 musicButton.style.zIndex = '1000';
                 musicButton.innerHTML = `
-                
-                    <button style="padding: 10px 20px; background: linear-gradient(45deg, ${config.primaryColor}, ${config.secondaryColor}); 
+                    <button style="padding: 10px 20px; background: linear-gradient(45deg, #ff0000, #8B0000); 
                     border: none; border-radius: 5px; color: white; cursor: pointer; font-family: inherit;">
                         ATIVAR MÚSICA
                     </button>
@@ -566,7 +609,7 @@
             
             el.addEventListener('mouseleave', () => {
                 customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                customCursor.style.color = config.primaryColor;
+                customCursor.style.color = '#ff0000';
             });
         });
 
