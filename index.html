@@ -354,9 +354,44 @@
                 width: 60px;
             }
         }
+
+/* Estilo para o vídeo de fundo do YouTube */
+#youtube-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+    display: none; /* Adicione esta linha para esconder inicialmente */
+    opacity: 0.7; /* Ajuste a opacidade conforme necessário */
+}
+
+#youtube-bg iframe {
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.77vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
     </style>
 </head>
 <body>
+
+  <!-- Vídeo de fundo do YouTube -->
+      <div id="youtube-bg">
+        <iframe src="https://www.youtube.com/embed/0MBWY3n8PC0?autoplay=1&mute=1&loop=1&playlist=0MBWY3n8PC0&controls=0&modestbranding=1&rel=0" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
     <!-- Tela de entrada -->
     <div id="enter-screen">
         <h1>CHALOX THE PRIME</h1>
@@ -514,30 +549,34 @@
         }
 
         // Mostrar conteúdo quando clicar na tela de entrada
-        enterScreen.addEventListener('click', () => {
-            // Incrementar contador
-            incrementVisitorCount();
-            
-            // Efeito de transição
-            enterScreen.style.opacity = '0';
-            enterScreen.style.transition = 'opacity 0.5s ease';
-            
-            // Mostrar conteúdo principal após a transição
-            setTimeout(() => {
-                enterScreen.style.display = 'none';
-                container.style.display = 'block';
-                
-                // Mostrar controles
-                visitorCounter.style.display = 'block';
-                volumeControl.style.display = 'flex';
-                
-                // Iniciar música
-                startMusic();
-                
-                // Iniciar efeitos de sangue
-                createBloodParticles();
-            }, 500);
-        });
+       // Mostrar conteúdo quando clicar na tela de entrada
+enterScreen.addEventListener('click', () => {
+    // Mostrar o vídeo do YouTube
+    document.getElementById('youtube-bg').style.display = 'block';
+    
+    // Incrementar contador
+    incrementVisitorCount();
+    
+    // Efeito de transição
+    enterScreen.style.opacity = '0';
+    enterScreen.style.transition = 'opacity 0.5s ease';
+    
+    // Mostrar conteúdo principal após a transição
+    setTimeout(() => {
+        enterScreen.style.display = 'none';
+        container.style.display = 'block';
+        
+        // Mostrar controles
+        visitorCounter.style.display = 'block';
+        volumeControl.style.display = 'flex';
+        
+        // Iniciar música
+        startMusic();
+        
+        // Iniciar efeitos de sangue
+        createBloodParticles();
+    }, 500);
+});
 
         // Iniciar música
         function startMusic() {
@@ -636,6 +675,15 @@
                 bloodContainer.appendChild(particle);
             }
         }
+
+        // Fallback para o vídeo caso não carregue
+        setTimeout(() => {
+            if (!document.querySelector('#youtube-bg iframe').contentWindow.document) {
+                document.getElementById('youtube-bg').innerHTML = `
+                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:url('https://i.ytimg.com/vi/0MBWY3n8PC0/maxresdefault.jpg') center/cover no-repeat;"></div>
+                `;
+            }
+        }, 5000);
     </script>
 </body>
 </html>
